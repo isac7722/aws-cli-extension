@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/isac7722/aws-cli-extension/compare/v1.0.0...v1.1.0) (2026-04-08)
+
+
+### Features
+
+* add pre-push hook for golangci-lint auto check ([765401e](https://github.com/isac7722/aws-cli-extension/commit/765401e1623f95362e8a58e1ad0717ecdbdc0f69))
+
 ## 1.0.0 (2026-04-08)
 
 
