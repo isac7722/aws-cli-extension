@@ -9,4 +9,9 @@ if ! command -v goimports >/dev/null 2>&1; then
   go install golang.org/x/tools/cmd/goimports@latest
 fi
 
-echo "Done! Go files will be auto-formatted on commit."
+if ! command -v golangci-lint >/dev/null 2>&1; then
+  echo "Installing golangci-lint..."
+  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+fi
+
+echo "Done! Go files will be auto-formatted on commit, and lint checked on push."

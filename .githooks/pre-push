@@ -1,0 +1,20 @@
+#!/bin/sh
+# Pre-push hook: run golangci-lint before pushing
+
+# Ensure GOPATH/bin is in PATH
+GOPATH="${GOPATH:-$(go env GOPATH)}"
+export PATH="$GOPATH/bin:$PATH"
+
+if ! command -v golangci-lint >/dev/null 2>&1; then
+  echo "Error: golangci-lint not found. Install with: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+  exit 1
+fi
+
+echo "Running golangci-lint..."
+golangci-lint run ./...
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Lint failed. Fix issues before pushing."
+  echo "Tip: run 'golangci-lint run --fix ./...' to auto-fix some issues."
+  exit 1
+fi
