@@ -109,15 +109,15 @@ func (m ConfirmModel) View() string {
 			fmt.Fprintf(&sb, "  %s %s\n", Dim.Render("Parameter:"), Bold.Render(m.items[0]))
 		} else {
 			label := "Parameters"
-			sb.WriteString(fmt.Sprintf("  %s (%d):\n", Dim.Render(label), len(m.items)))
+			fmt.Fprintf(&sb, "  %s (%d):\n", Dim.Render(label), len(m.items))
 			maxShow := 10
 			for i, item := range m.items {
 				if i >= maxShow {
 					remaining := len(m.items) - maxShow
-					sb.WriteString(fmt.Sprintf("    %s\n", Dim.Render(fmt.Sprintf("… and %d more", remaining))))
+					fmt.Fprintf(&sb, "    %s\n", Dim.Render(fmt.Sprintf("… and %d more", remaining)))
 					break
 				}
-				sb.WriteString(fmt.Sprintf("    %s %s\n", Dim.Render("•"), m.itemStyle().Render(item)))
+				fmt.Fprintf(&sb, "    %s %s\n", Dim.Render("•"), m.itemStyle().Render(item))
 			}
 		}
 		sb.WriteString("\n")
@@ -146,7 +146,7 @@ func (m ConfirmModel) View() string {
 	}
 	hint := fmt.Sprintf("[%s/%s]", yLabel, nLabel)
 
-	sb.WriteString(fmt.Sprintf("%s %s %s", icon, msgStyle.Render(m.message), hint))
+	fmt.Fprintf(&sb, "%s %s %s", icon, msgStyle.Render(m.message), hint)
 
 	// Help bar or overlay.
 	if overlay := m.help.View(); overlay != "" {

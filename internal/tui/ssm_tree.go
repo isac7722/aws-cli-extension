@@ -340,8 +340,8 @@ func (m SSMTreeModel) renderDetailPanel() string {
 	}
 
 	// Name and path.
-	sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("Name:"), Bold.Render(m.detailNode.Name)))
-	sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("Path:"), m.detailNode.Path))
+	fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("Name:"), Bold.Render(m.detailNode.Name))
+	fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("Path:"), m.detailNode.Path)
 
 	// Type.
 	if m.detailNode.Meta != nil {
@@ -351,7 +351,7 @@ func (m SSMTreeModel) renderDetailPanel() string {
 		} else {
 			typeStr = Cyan.Render(typeStr)
 		}
-		sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("Type:"), typeStr))
+		fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("Type:"), typeStr)
 	}
 
 	// Value — from fetched detail if available.
@@ -359,15 +359,15 @@ func (m SSMTreeModel) renderDetailPanel() string {
 		valueLabel := "Value:"
 		if m.detailNode.IsSecureString() {
 			if m.decrypted {
-				sb.WriteString(fmt.Sprintf("  %s %s\n", Dim.Render(valueLabel), Yellow.Render(m.detail.Value)))
+				fmt.Fprintf(&sb, "  %s %s\n", Dim.Render(valueLabel), Yellow.Render(m.detail.Value))
 			} else {
-				sb.WriteString(fmt.Sprintf("  %s %s  %s\n", Dim.Render(valueLabel), Dim.Render("••••••••"), Dim.Render("(press d to decrypt)")))
+				fmt.Fprintf(&sb, "  %s %s  %s\n", Dim.Render(valueLabel), Dim.Render("••••••••"), Dim.Render("(press d to decrypt)"))
 			}
 		} else {
-			sb.WriteString(fmt.Sprintf("  %s %s\n", Dim.Render(valueLabel), Green.Render(m.detail.Value)))
+			fmt.Fprintf(&sb, "  %s %s\n", Dim.Render(valueLabel), Green.Render(m.detail.Value))
 		}
 	} else if m.detailNode.IsSecureString() {
-		sb.WriteString(fmt.Sprintf("  %s %s  %s\n", Dim.Render("Value:"), Dim.Render("••••••••"), Dim.Render("(press d to decrypt)")))
+		fmt.Fprintf(&sb, "  %s %s  %s\n", Dim.Render("Value:"), Dim.Render("••••••••"), Dim.Render("(press d to decrypt)"))
 	}
 
 	// Metadata fields from node meta or fetched detail.
@@ -378,16 +378,16 @@ func (m SSMTreeModel) renderDetailPanel() string {
 
 	if meta != nil {
 		if meta.Version > 0 {
-			sb.WriteString(fmt.Sprintf("  %s  %d\n", Dim.Render("Version:"), meta.Version))
+			fmt.Fprintf(&sb, "  %s  %d\n", Dim.Render("Version:"), meta.Version)
 		}
 		if !meta.LastModified.IsZero() {
-			sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("Modified:"), meta.LastModified.Format("2006-01-02 15:04:05 UTC")))
+			fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("Modified:"), meta.LastModified.Format("2006-01-02 15:04:05 UTC"))
 		}
 		if meta.DataType != "" {
-			sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("DataType:"), meta.DataType))
+			fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("DataType:"), meta.DataType)
 		}
 		if meta.ARN != "" {
-			sb.WriteString(fmt.Sprintf("  %s  %s\n", Dim.Render("ARN:"), Dim.Render(meta.ARN)))
+			fmt.Fprintf(&sb, "  %s  %s\n", Dim.Render("ARN:"), Dim.Render(meta.ARN))
 		}
 	}
 
