@@ -1,0 +1,49 @@
+version: 2
+
+project_name: aws-cli-extension
+
+builds:
+  - main: ./cmd/ae
+    binary: awse
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - formats: ['tar.gz']
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+brews:
+  - name: awse
+    repository:
+      owner: isac7722
+      name: homebrew-awse
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: "https://github.com/isac7722/aws-cli-extension"
+    description: "AWS Extension CLI — interactive AWS profile and parameter management"
+    install: |
+      bin.install "awse"
+    test: |
+      system "#{bin}/awse", "version"

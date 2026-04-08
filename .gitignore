@@ -1,0 +1,19 @@
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.env
+.env.local
+.env.*.local
+/.claude
+/.agents
+skills-lock.json
+
+# Go
+/awse
+/ae
+dist/

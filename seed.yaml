@@ -1,0 +1,119 @@
+goal: >
+  Build 'ae' (aws-extension) — a Go CLI tool that extends AWS CLI workflows
+  with interactive TUI for AWS profile management, SSM Parameter Store browsing,
+  and AWS CLI installation guidance. Modeled after the ge (git-extension) project
+  architecture using Cobra + Bubble Tea.
+
+constraints:
+  - "Go >= 1.22"
+  - "Cobra for CLI framework"
+  - "Bubble Tea (Charmbracelet) for TUI components"
+  - "AWS SDK for Go v2 for API calls (no aws CLI dependency for core features)"
+  - "Directly read/write ~/.aws/credentials and ~/.aws/config (standard INI format)"
+  - "Shell wrapper pattern eval $(ae init shell) for environment variable export"
+  - "Supported shells bash and zsh"
+  - "Target platforms macOS and Linux only"
+  - "No SSO, assume-role, or EC2 Session Manager support"
+  - "No Windows support in initial version"
+
+acceptance_criteria:
+  - "ae user list lists all AWS profiles from ~/.aws/credentials"
+  - "ae user add interactively adds a new profile (name, access key, secret key, region)"
+  - "ae user edit interactively edits an existing profile"
+  - "ae user delete deletes a profile with confirmation prompt"
+  - "ae user switch TUI selector to switch active AWS_PROFILE via shell wrapper"
+  - "ae init bash/zsh outputs shell wrapper script that enables AWS_PROFILE switching"
+  - "ae doctor detects AWS CLI v2 installation status and shows OS-appropriate install guidance"
+  - "ae ssm TUI with profile/region selector on entry"
+  - "ae ssm path tree navigation for SSM Parameter Store hierarchy"
+  - "ae ssm CRUD operations on parameters (String, StringList, SecureString)"
+  - "ae ssm SecureString values shown masked by default with decrypt/reveal option"
+  - "TUI uses vim-style j/k + arrow key navigation"
+
+ontology_schema:
+  name: AWSExtension
+  description: AWS CLI extension domain model for profile and parameter management
+  fields:
+    - name: profiles
+      type: array
+      description: List of AWS credential profiles from ~/.aws/credentials
+    - name: profile_name
+      type: string
+      description: AWS profile identifier (INI section name)
+    - name: access_key_id
+      type: string
+      description: AWS access key ID
+    - name: secret_access_key
+      type: string
+      description: AWS secret access key
+    - name: region
+      type: string
+      description: Default AWS region for the profile
+    - name: active_profile
+      type: string
+      description: Currently active AWS_PROFILE
+    - name: parameters
+      type: array
+      description: SSM Parameter Store entries in tree structure
+    - name: parameter_path
+      type: string
+      description: SSM parameter path (e.g., /app/prod/db-password)
+    - name: parameter_type
+      type: string
+      description: "Parameter type: String, StringList, or SecureString"
+    - name: parameter_value
+      type: string
+      description: Parameter value (masked for SecureString)
+
+evaluation_principles:
+  - name: ux_consistency
+    description: TUI patterns match ge project (selector, navigation, color coding, stderr rendering)
+    weight: 0.9
+  - name: aws_compatibility
+    description: Reads/writes standard AWS config format without corruption
+    weight: 1.0
+  - name: security
+    description: SecureString values never logged or displayed without explicit user action
+    weight: 1.0
+  - name: code_structure
+    description: Project structure mirrors ge (cmd/, internal/cmd/, internal/tui/, internal/config/)
+    weight: 0.8
+  - name: error_handling
+    description: User-friendly error messages in TUI, graceful handling of invalid credentials
+    weight: 0.7
+
+exit_conditions:
+  - name: all_features_implemented
+    description: All three core features (user, doctor, ssm) are functional
+    criteria: All acceptance criteria pass
+  - name: tui_functional
+    description: Interactive TUI works for all features
+    criteria: Bubble Tea models render and respond to input correctly
+  - name: shell_wrapper_works
+    description: Shell wrapper pattern enables profile switching
+    criteria: "eval \"$(ae init zsh)\" + ae user switch exports AWS_PROFILE"
+
+metadata:
+  version: "1.0"
+  created: "2026-04-08"
+  interview_id: interview_20260408_015824
+  ambiguity_score: 0.18
+  project_type: brownfield
+
+brownfield:
+  context_references:
+    - path: ~/dev/isac7722/git-extension
+      role: reference
+      summary: Go CLI with Cobra + Bubble Tea architecture to replicate for AWS use case
+  existing_patterns:
+    - Cobra command/subcommand routing
+    - Bubble Tea TUI models (SelectorModel, MultiSelectorModel, TextAreaModel)
+    - Shell wrapper via eval "$(cmd init shell)" for env var export
+    - Lipgloss styling with stderr output
+    - INI-based credential file parsing
+    - goreleaser + install.sh distribution
+  existing_dependencies:
+    - github.com/spf13/cobra
+    - github.com/charmbracelet/bubbletea
+    - github.com/charmbracelet/lipgloss
+    - github.com/aws/aws-sdk-go-v2
