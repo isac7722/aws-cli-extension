@@ -300,14 +300,6 @@ func (c *AWSConfig) Save() error {
 	return nil
 }
 
-// credentialKeys are the keys managed in the credentials file.
-var credentialKeys = []string{
-	"aws_access_key_id",
-	"aws_secret_access_key",
-	"aws_session_token",
-	"region",
-}
-
 func (c *AWSConfig) saveCredentials(path string) error {
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -383,12 +375,6 @@ func (c *AWSConfig) patchCredentialLines(lines []string, p Profile) []string {
 		}
 	}
 	return lines
-}
-
-// configKeys are the keys managed in the config file.
-var configKeys = []string{
-	"region",
-	"output",
 }
 
 func (c *AWSConfig) saveConfig(path string) error {

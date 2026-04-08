@@ -44,14 +44,6 @@ type parametersLoadedMsg struct {
 	err    error
 }
 
-// parameterValueMsg is sent when a single parameter's value has been fetched
-// (potentially decrypted for SecureString).
-type parameterValueMsg struct {
-	path  string
-	value string
-	err   error
-}
-
 // parameterDetailMsg is sent when full parameter detail (metadata + value) is fetched.
 type parameterDetailMsg struct {
 	detail *ssm.ParameterDetail
@@ -110,9 +102,6 @@ type visibleRow struct {
 type BrowserModel struct {
 	// options holds the configuration provided at creation time.
 	options BrowserOptions
-
-	// client is the SSM API client used to fetch parameters and values.
-	client *ssm.Client
 
 	// tree is the root of the parameter path hierarchy.
 	tree *ssm.TreeNode
@@ -846,32 +835,6 @@ func (m BrowserModel) fetchParameterDetail(path string, decrypt bool) tea.Cmd {
 		}
 
 		detail, err := client.GetParameterDetail(ctx, path, decrypt)
-		if err != nil {
-			return parameterDetailMsg{err: err}
-		}
-
-		return parameterDetailMsg{detail: detail}
-	}
-}
-
-// fetchValueForOutput fetches a parameter value and quits with it selected.
-func (m BrowserModel) fetchValueForOutput(path string) tea.Cmd {
-	return func() tea.Msg {
-		ctx, cancel := context.WithTimeout(context.Background(), fetchTimeout)
-		defer cancel()
-
-		client, err := ssm.NewClient(ctx, ssm.ClientOptions{
-			Profile:         m.options.Profile,
-			Region:          m.options.Region,
-			AccessKeyID:     m.options.AccessKeyID,
-			SecretAccessKey: m.options.SecretAccessKey,
-			SessionToken:    m.options.SessionToken,
-		})
-		if err != nil {
-			return parameterDetailMsg{err: err}
-		}
-
-		detail, err := client.GetParameterDetail(ctx, path, true)
 		if err != nil {
 			return parameterDetailMsg{err: err}
 		}

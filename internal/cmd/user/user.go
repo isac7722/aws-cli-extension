@@ -100,7 +100,7 @@ func runInteractiveSwitch(cmd *cobra.Command) error {
 	}
 
 	// Output AWSE_EXPORT protocol for shell wrapper
-	fmt.Fprintf(cmd.OutOrStdout(), "AWSE_EXPORT:AWS_PROFILE=%s\n", profileName)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "AWSE_EXPORT:AWS_PROFILE=%s\n", profileName)
 
 	// Profile card to stderr
 	fmt.Fprintf(os.Stderr, "\n%s %s\n", tui.Green.Render("✔"), tui.Bold.Render("Switched to "+profileName))
@@ -118,7 +118,7 @@ func runInteractiveSwitch(cmd *cobra.Command) error {
 			rows = append(rows, tui.CardLabel.Render("Output")+" "+profile.Output)
 		}
 
-		card := tui.CardStyle.Render(fmt.Sprintf("%s", joinLines(rows)))
+		card := tui.CardStyle.Render(joinLines(rows))
 		fmt.Fprintf(os.Stderr, "%s\n", card)
 	}
 

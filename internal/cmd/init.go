@@ -23,7 +23,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	shell := args[0]
 	switch shell {
 	case "bash", "zsh":
-		fmt.Fprint(cmd.OutOrStdout(), shellWrapper(shell))
+		_, _ = fmt.Fprint(cmd.OutOrStdout(), shellWrapper(shell))
 		return nil
 	default:
 		return fmt.Errorf("unsupported shell: %s (supported: bash, zsh)", shell)

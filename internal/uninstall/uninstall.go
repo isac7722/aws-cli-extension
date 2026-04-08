@@ -58,12 +58,12 @@ func FormatPlan(plan *Plan) string {
 	if len(plan.Targets) > 0 {
 		sb.WriteString("\n  Shell integration:\n")
 		for _, t := range plan.Targets {
-			sb.WriteString(fmt.Sprintf("    • %s\n", t.Description))
+			fmt.Fprintf(&sb, "    • %s\n", t.Description)
 		}
 	}
 
 	if plan.BinaryPath != "" {
-		sb.WriteString(fmt.Sprintf("\n  Binary:\n    • %s (manual removal required)\n", plan.BinaryPath))
+		fmt.Fprintf(&sb, "\n  Binary:\n    • %s (manual removal required)\n", plan.BinaryPath)
 	}
 
 	return sb.String()

@@ -106,7 +106,7 @@ func (m ConfirmModel) View() string {
 	if len(m.items) > 0 {
 		sb.WriteString("\n")
 		if len(m.items) == 1 {
-			sb.WriteString(fmt.Sprintf("  %s %s\n", Dim.Render("Parameter:"), Bold.Render(m.items[0])))
+			fmt.Fprintf(&sb, "  %s %s\n", Dim.Render("Parameter:"), Bold.Render(m.items[0]))
 		} else {
 			label := "Parameters"
 			sb.WriteString(fmt.Sprintf("  %s (%d):\n", Dim.Render(label), len(m.items)))
@@ -136,8 +136,7 @@ func (m ConfirmModel) View() string {
 	}
 
 	// Toggle highlight for Y/N.
-	yLabel := "y"
-	nLabel := "N"
+	var yLabel, nLabel string
 	if m.focused {
 		yLabel = Selected.Render("Y")
 		nLabel = "n"

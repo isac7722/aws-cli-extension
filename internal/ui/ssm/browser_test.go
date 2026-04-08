@@ -54,16 +54,6 @@ func newTestBrowser() BrowserModel {
 	return m
 }
 
-// findVisibleIndex returns the index of the first visible row whose path contains substr.
-func findVisibleIndex(m BrowserModel, substr string) int {
-	for i, row := range m.visible {
-		if strings.Contains(row.node.Path, substr) {
-			return i
-		}
-	}
-	return -1
-}
-
 // sendKey sends a key message to the model and returns the updated model.
 func sendKey(m BrowserModel, key string) BrowserModel {
 	var msg tea.KeyMsg

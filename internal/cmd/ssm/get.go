@@ -14,7 +14,6 @@ import (
 var (
 	getFlagName    string
 	getFlagDecrypt bool
-	getFlagJSON    bool
 )
 
 var getCmd = &cobra.Command{

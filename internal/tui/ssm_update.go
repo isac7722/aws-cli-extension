@@ -242,7 +242,7 @@ func (m SSMUpdateModel) View() string {
 	for i, label := range m.labels {
 		field := ssmUpdateField(i)
 		cursor := "  "
-		styledLabel := label
+		var styledLabel string
 		if field == m.focused {
 			cursor = Cursor.Render("❯ ")
 			styledLabel = Selected.Render(label)
